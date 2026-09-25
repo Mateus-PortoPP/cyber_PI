@@ -11,7 +11,8 @@ function newState(url) {
     cookies: {
       headers: [],                   // Set-Cookie recebidos: o que o servidor tentou gravar
       stored: {}                     // cookies.onChanged: o que o navegador de fato gravou
-    }
+    },
+    storage: {}                      // frameId -> resumo do armazenamento HTML5 (vindo do content.js)
   };
 }
 
@@ -100,7 +101,13 @@ browser.tabs.query({}).then((list) => {
 
 browser.tabs.onRemoved.addListener((tabId) => tabs.delete(tabId));
 
-browser.runtime.onMessage.addListener((msg) => {
+browser.runtime.onMessage.addListener((msg, sender) => {
+  // Armazenamento HTML5 lido pelo content.js de um frame desta aba.
+  if (msg.type === "storage" && sender.tab) {
+    const state = tabs.get(sender.tab.id);
+    if (state) state.storage[sender.frameId] = { url: sender.url, ...msg.snapshot };
+    return;
+  }
   if (msg.type === "getReport") {
     return Promise.resolve(tabs.get(msg.tabId) || null);
   }
