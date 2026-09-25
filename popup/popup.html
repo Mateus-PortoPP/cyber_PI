@@ -15,6 +15,17 @@
   </p>
 
   <main id="report" hidden>
+    <section class="score">
+      <div class="score-value"><strong id="score">–</strong><span>/100</span></div>
+      <div>
+        <div>Pontuação de privacidade: <strong id="score-band"></strong></div>
+        <table>
+          <thead><tr><th>Critério</th><th>Encontrados</th><th>Desconto</th></tr></thead>
+          <tbody id="score-items"></tbody>
+        </table>
+      </div>
+    </section>
+
     <section class="summary">
       <div><strong id="sum-third">0</strong><span>domínios de terceira parte</span></div>
       <div><strong id="sum-cookies">0</strong><span>cookies gravados</span></div>
@@ -50,6 +61,8 @@
     </section>
   </main>
 
+  <script src="../lib/psl.js"></script>
+  <script src="../lib/score.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

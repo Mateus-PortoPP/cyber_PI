@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Rastro",
   "version": "0.1.0",
-  "description": "Detecta conexões a domínios de terceira parte, cookies injetados e uso de armazenamento HTML5 (localStorage, sessionStorage, IndexedDB).",
+  "description": "Detecta conexões a domínios de terceira parte, cookies injetados e uso de armazenamento HTML5 (localStorage, sessionStorage, IndexedDB), com pontuação de privacidade.",
   "browser_specific_settings": {
     "gecko": {
       "id": "rastro@cyber-pi",
