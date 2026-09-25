@@ -1,0 +1,23 @@
+body {
+  width: 520px;
+  margin: 0;
+  padding: 12px 14px;
+  font: 13px/1.4 system-ui, sans-serif;
+  color: #1d1d1f;
+  background: #fff;
+}
+h1 { font-size: 16px; margin: 0; }
+h2 { font-size: 13px; margin: 16px 0 6px; text-transform: uppercase; letter-spacing: .04em; color: #555; }
+#site { margin: 2px 0 10px; color: #555; word-break: break-all; }
+
+.summary { display: flex; gap: 8px; }
+.summary div { flex: 1; padding: 8px; border-radius: 6px; background: #f2f2f4; }
+.summary strong { display: block; font-size: 20px; }
+.summary span { color: #555; font-size: 12px; }
+
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 4px 6px; border-bottom: 1px solid #e5e5e5; vertical-align: top; word-break: break-all; }
+th { font-weight: 600; color: #555; }
+td.muted { color: #999; }
+.hosts { color: #777; font-size: 11px; }
+.note { margin: 0 0 6px; color: #555; }

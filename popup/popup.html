@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <h1>Rastro</h1>
+    <p id="site"></p>
+  </header>
+
+  <p id="empty" hidden>
+    Sem dados para esta aba. Recarregue a página com a extensão já carregada.
+  </p>
+
+  <main id="report" hidden>
+    <section class="summary">
+      <div><strong id="sum-third">0</strong><span>domínios de terceira parte</span></div>
+      <div><strong id="sum-cookies">0</strong><span>cookies gravados</span></div>
+      <div><strong id="sum-storage">0</strong><span>frames usando armazenamento</span></div>
+    </section>
+
+    <section>
+      <h2>Conexões a terceira parte</h2>
+      <table>
+        <thead><tr><th>Domínio</th><th>Requisições</th><th>Tipos</th></tr></thead>
+        <tbody id="third-party"></tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Cookies injetados</h2>
+      <p class="note">
+        Set-Cookie recebidos (servidor tentou gravar): <strong id="cookie-headers">0</strong> ·
+        gravados no navegador: <strong id="cookie-stored">0</strong>
+      </p>
+      <table>
+        <thead><tr><th>Nome</th><th>Domínio</th><th>Particionado</th></tr></thead>
+        <tbody id="cookies"></tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Armazenamento HTML5</h2>
+      <table>
+        <thead><tr><th>Frame (origem)</th><th>localStorage</th><th>sessionStorage</th><th>IndexedDB</th></tr></thead>
+        <tbody id="storage"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>
