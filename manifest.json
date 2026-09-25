@@ -1,0 +1,36 @@
+{
+  "manifest_version": 2,
+  "name": "Rastro",
+  "version": "0.1.0",
+  "description": "Detecta rastreadores de terceira parte, cookies, armazenamento HTML5, canvas fingerprint, cookie sync e bounce tracking.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "rastro@insper.edu.br",
+      "strict_min_version": "115.0"
+    }
+  },
+  "permissions": [
+    "webRequest",
+    "webNavigation",
+    "cookies",
+    "tabs",
+    "downloads",
+    "<all_urls>"
+  ],
+  "background": {
+    "scripts": ["lib/psl.js", "lib/trackers.js", "background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_about_blank": true
+    }
+  ],
+  "browser_action": {
+    "default_title": "Rastro",
+    "default_popup": "popup/popup.html"
+  }
+}
