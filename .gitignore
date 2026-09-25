@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# Editores
+.vscode/
+.idea/
+*.swp
+
+# Pacotes gerados da extensão (web-ext build / zip manual)
+web-ext-artifacts/
+*.xpi
+*.zip
+
+# Dependências, caso algum dia use npm (ex.: web-ext)
+node_modules/
+
+# Configuração local do Claude Code
+.claude/
