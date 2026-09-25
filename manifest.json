@@ -2,10 +2,10 @@
   "manifest_version": 2,
   "name": "Rastro",
   "version": "0.1.0",
-  "description": "Detecta rastreadores de terceira parte, cookies, armazenamento HTML5, canvas fingerprint, cookie sync e bounce tracking.",
+  "description": "Detecta conexões a domínios de terceira parte, cookies injetados e uso de armazenamento HTML5 (localStorage, sessionStorage, IndexedDB).",
   "browser_specific_settings": {
     "gecko": {
-      "id": "rastro@insper.edu.br",
+      "id": "rastro@cyber-pi",
       "strict_min_version": "115.0"
     }
   },
