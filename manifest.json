@@ -14,11 +14,10 @@
     "webNavigation",
     "cookies",
     "tabs",
-    "downloads",
     "<all_urls>"
   ],
   "background": {
-    "scripts": ["lib/psl.js", "lib/trackers.js", "background.js"]
+    "scripts": ["lib/psl.js", "background.js"]
   },
   "content_scripts": [
     {
