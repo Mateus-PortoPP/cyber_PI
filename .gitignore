@@ -16,3 +16,6 @@ node_modules/
 
 # Configuração local do Claude Code
 .claude/
+
+# Notas pessoais para o relatório
+NOTAS-RELATORIO.md
