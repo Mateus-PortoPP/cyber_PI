@@ -96,6 +96,22 @@ for (const glCtor of ["WebGLRenderingContext", "WebGL2RenderingContext"]) {
 }
 
 // ---------------------------------------------------------------------------
+// Interação do usuário (para o bounce tracking)
+// ---------------------------------------------------------------------------
+
+// Uma página que sai sozinha em poucos segundos, sem clique nem tecla, é suspeita
+// de bounce. Avisa o background na primeira interação na página principal.
+if (window === window.top) {
+  const onInteraction = () => {
+    browser.runtime.sendMessage({ type: "interaction" }).catch(() => {});
+    window.removeEventListener("pointerdown", onInteraction, true);
+    window.removeEventListener("keydown", onInteraction, true);
+  };
+  window.addEventListener("pointerdown", onInteraction, true);
+  window.addEventListener("keydown", onInteraction, true);
+}
+
+// ---------------------------------------------------------------------------
 // Armazenamento HTML5
 // ---------------------------------------------------------------------------
 

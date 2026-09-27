@@ -116,6 +116,18 @@ function render(report, currentUrl) {
   }
   if (!canvasFrames.length) emptyRow(canvasBody, 4, "Nenhuma leitura de canvas.");
 
+  // Bounce tracking, cookie sync e parâmetros de rastreio
+  const { params, bounces, syncs } = report.tracking;
+  document.getElementById("tracking-params").textContent = params.length ? params.join(", ") : "nenhum";
+  const trackingBody = document.getElementById("tracking");
+  for (const b of bounces) {
+    const stay = b.stayMs != null ? `, ficou ${(b.stayMs / 1000).toFixed(1)} s` : "";
+    const cookies = b.cookies != null ? `, gravou ${b.cookies} cookie(s)` : "";
+    row(trackingBody, [cell("bounce"), cell(`${hostOf(b.url)} — ${b.via}${stay}${cookies}`)]);
+  }
+  for (const s of syncs) row(trackingBody, [cell("cookie sync"), cell(`${s.kind}: ${s.detail}`)]);
+  if (!bounces.length && !syncs.length) emptyRow(trackingBody, 2, "Nenhum bounce ou cookie sync.");
+
   // Armazenamento HTML5, um frame por linha (frame 0 = página principal primeiro)
   const frames = Object.entries(report.storage).sort((a, b) => Number(a[0]) - Number(b[0]));
   const storageBody = document.getElementById("storage");
