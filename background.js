@@ -12,7 +12,8 @@ function newState(url) {
       headers: [],                   // Set-Cookie recebidos: o que o servidor tentou gravar
       stored: {}                     // cookies.onChanged: o que o navegador de fato gravou
     },
-    storage: {}                      // frameId -> resumo do armazenamento HTML5 (vindo do content.js)
+    storage: {},                     // frameId -> resumo do armazenamento HTML5 (vindo do content.js)
+    canvas: {}                       // frameId -> leituras de canvas interceptadas (vindo do content.js)
   };
 }
 
@@ -116,6 +117,12 @@ browser.runtime.onMessage.addListener((msg, sender) => {
   if (msg.type === "storage" && sender.tab) {
     const state = tabs.get(sender.tab.id);
     if (state) state.storage[sender.frameId] = { url: sender.url, ...msg.snapshot };
+    return;
+  }
+  // Leituras de canvas interceptadas pelo content.js de um frame desta aba.
+  if (msg.type === "canvas" && sender.tab) {
+    const state = tabs.get(sender.tab.id);
+    if (state) state.canvas[sender.frameId] = { url: sender.url, reads: msg.reads };
     return;
   }
   if (msg.type === "getReport") {

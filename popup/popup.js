@@ -27,6 +27,13 @@ function describeDuration(cookie) {
   return `persistente (${days} dias)`;
 }
 
+// Origem do frame; o frame 0 é a página principal.
+function frameLabel(frameId, url) {
+  let origin;
+  try { origin = new URL(url).origin; } catch (e) { origin = url; }
+  return frameId === "0" ? origin + " (página)" : origin;
+}
+
 // Resumo de uma leitura de storage vinda do content.js.
 function describeStorage(entry, field) {
   if (!entry) return "—";
@@ -94,13 +101,26 @@ function render(report, currentUrl) {
   document.getElementById("cookie-session").textContent = session;
   document.getElementById("cookie-persistent").textContent = stored.length - session;
 
+  // Canvas: uma linha por frame e função de leitura
+  const canvasBody = document.getElementById("canvas");
+  const canvasFrames = Object.entries(report.canvas).sort((a, b) => Number(a[0]) - Number(b[0]));
+  for (const [frameId, f] of canvasFrames) {
+    for (const [api, read] of Object.entries(f.reads)) {
+      row(canvasBody, [
+        cell(frameLabel(frameId, f.url)),
+        cell(api),
+        cell(String(read.calls)),
+        cell(String(read.suspicious), read.suspicious ? "" : "muted")
+      ]);
+    }
+  }
+  if (!canvasFrames.length) emptyRow(canvasBody, 4, "Nenhuma leitura de canvas.");
+
   // Armazenamento HTML5, um frame por linha (frame 0 = página principal primeiro)
   const frames = Object.entries(report.storage).sort((a, b) => Number(a[0]) - Number(b[0]));
   const storageBody = document.getElementById("storage");
   for (const [frameId, f] of frames) {
-    let origin;
-    try { origin = new URL(f.url).origin; } catch (e) { origin = f.url; }
-    const label = frameId === "0" ? origin + " (página)" : origin;
+    const label = frameLabel(frameId, f.url);
     row(storageBody, [
       cell(label),
       cell(describeStorage(f.localStorage, "keys")),

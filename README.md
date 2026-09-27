@@ -8,6 +8,9 @@ privacidade do usuário:
   `cookies.onChanged`, que também vê cookies criados por JavaScript), classificados
   em primeira/terceira parte e em sessão/persistentes;
 - uso de armazenamento HTML5 (localStorage, sessionStorage e IndexedDB), em cada frame;
+- canvas fingerprint: leitura de canvas (≥16×16) em que foi desenhado texto, ou de
+  canvas WebGL, interceptada em canvas comum, OffscreenCanvas e WebGL — inclusive
+  quando o conteúdo é copiado para outro canvas antes da leitura;
 - uma pontuação de privacidade de 0 a 100 (ver [Pontuação](#pontuação-de-privacidade)).
 
 Avaliação Intermediária de Cibersegurança — Insper.
@@ -55,7 +58,7 @@ defender, maior o peso. Cálculo em `lib/score.js`.
 | Domínio de terceira parte | −2 cada | −30 |
 | Cookie de terceira parte | −3 cada | −20 |
 | Cookie persistente | −1 cada | −10 |
-| Frame de terceira parte com armazenamento HTML5 | −5 cada | −10 |
+| Origem de terceira parte com armazenamento HTML5 | −5 cada | −10 |
 | Canvas fingerprint | −20 | −20 |
 | Bounce tracking / cookie sync | −15 | −15 |
 
@@ -72,6 +75,6 @@ Critérios ainda não detectados pelo plugin aparecem no popup como
 | `lib/psl.js` | cálculo aproximado de eTLD+1 e teste de terceira parte |
 | `lib/score.js` | critérios, pesos e cálculo da pontuação de privacidade |
 | `background.js` | estado por aba: requisições de terceira parte e cookies |
-| `content.js` | roda em cada página e iframe; lê o armazenamento HTML5 |
+| `content.js` | roda em cada página e iframe; intercepta leituras de canvas e aberturas de IndexedDB; lê o armazenamento HTML5 |
 | `popup/` | interface com o relatório da aba atual |
 | `evidencias/` | prints e arquivos HAR usados no relatório |
