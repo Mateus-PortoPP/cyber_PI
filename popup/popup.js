@@ -20,6 +20,13 @@ function emptyRow(tbody, columns, text) {
   row(tbody, [td]);
 }
 
+// "sessão" ou "persistente (N dias)", a partir da validade do cookie.
+function describeDuration(cookie) {
+  if (cookie.session) return "sessão";
+  const days = Math.round((cookie.expires * 1000 - Date.now()) / 86400000);
+  return `persistente (${days} dias)`;
+}
+
 // Resumo de uma leitura de storage vinda do content.js.
 function describeStorage(entry, field) {
   if (!entry) return "—";
@@ -66,12 +73,26 @@ function render(report, currentUrl) {
   // Cookies
   const stored = Object.values(report.cookies.stored);
   const cookieBody = document.getElementById("cookies");
+  // 3ª parte primeiro, depois por nome
+  stored.sort((a, b) => (b.thirdParty - a.thirdParty) || a.name.localeCompare(b.name));
   for (const c of stored) {
-    row(cookieBody, [cell(c.name), cell(c.domain), cell(c.partitioned ? "sim" : "não")]);
+    row(cookieBody, [
+      cell(c.name),
+      cell(c.domain),
+      cell(c.thirdParty ? "3ª" : "1ª"),
+      cell(describeDuration(c)),
+      cell(c.partitioned ? "sim" : "não")
+    ]);
   }
-  if (!stored.length) emptyRow(cookieBody, 3, "Nenhum cookie gravado.");
+  if (!stored.length) emptyRow(cookieBody, 5, "Nenhum cookie gravado.");
+  const third = stored.filter((c) => c.thirdParty).length;
+  const session = stored.filter((c) => c.session).length;
   document.getElementById("cookie-headers").textContent = report.cookies.headers.length;
   document.getElementById("cookie-stored").textContent = stored.length;
+  document.getElementById("cookie-first").textContent = stored.length - third;
+  document.getElementById("cookie-third").textContent = third;
+  document.getElementById("cookie-session").textContent = session;
+  document.getElementById("cookie-persistent").textContent = stored.length - session;
 
   // Armazenamento HTML5, um frame por linha (frame 0 = página principal primeiro)
   const frames = Object.entries(report.storage).sort((a, b) => Number(a[0]) - Number(b[0]));

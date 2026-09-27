@@ -5,7 +5,8 @@ privacidade do usuário:
 
 - conexões a domínios de terceira parte (comparação por eTLD+1);
 - cookies injetados no carregamento da página (via cabeçalho `Set-Cookie` e via
-  `cookies.onChanged`, que também vê cookies criados por JavaScript);
+  `cookies.onChanged`, que também vê cookies criados por JavaScript), classificados
+  em primeira/terceira parte e em sessão/persistentes;
 - uso de armazenamento HTML5 (localStorage, sessionStorage e IndexedDB), em cada frame;
 - uma pontuação de privacidade de 0 a 100 (ver [Pontuação](#pontuação-de-privacidade)).
 

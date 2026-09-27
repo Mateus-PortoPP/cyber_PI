@@ -84,7 +84,17 @@ browser.cookies.onChanged.addListener(({ removed, cookie }) => {
       : state.site === cookieSite || cookieSite in state.thirdParty;
     if (!belongs) continue;
     const key = [cookie.name, cookie.domain, cookie.path, topLevel || ""].join("|");
-    state.cookies.stored[key] = { name: cookie.name, domain: cookie.domain, partitioned: !!topLevel };
+    state.cookies.stored[key] = {
+      name: cookie.name,
+      domain: cookie.domain,
+      partitioned: !!topLevel,
+      // 3ª parte: domínio do cookie com eTLD+1 diferente do site da aba
+      // (particionado implica 3ª parte: o Firefox só particiona cookies de terceiros).
+      thirdParty: !!topLevel || cookieSite !== state.site,
+      // Sessão: sem data de validade, some ao fechar o navegador. Persistente: tem validade.
+      session: cookie.session,
+      expires: cookie.session ? null : cookie.expirationDate   // segundos desde 1970
+    };
   }
 });
 
