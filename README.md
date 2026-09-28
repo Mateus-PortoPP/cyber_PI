@@ -79,3 +79,13 @@ Faixas: 80–100 boa · 50–79 moderada · abaixo de 50 ruim.
 | `content.js` | roda em cada página e iframe; intercepta leituras de canvas e aberturas de IndexedDB; lê o armazenamento HTML5; avisa a primeira interação do usuário |
 | `popup/` | interface com o relatório da aba atual |
 | `evidencias/` | prints e arquivos HAR usados no relatório |
+
+## Evidências e relatório
+
+- `evidencias/ddg/`: prints do plugin em execução nas DuckDuckGo Privacy Test Pages
+  (arquivos `*_final.png`, um por linha da tabela do relatório).
+- `evidencias/sites/<site>/`: para cada um dos 3 sites reais (`wikipedia`, `duckduckgo`,
+  `govbr`), o HAR exportado do DevTools (`<site>.har`), os prints do popup
+  (`<site>_popup_*.png`), o painel do uBlock Origin (`<site>_ublock.png`) e o
+  resultado do Blacklight (`<site>_blacklight.png`).
+- `relatorio/`: relatório da avaliação (`relatorio.pdf`; fonte em `relatorio.html`).
