@@ -33,7 +33,7 @@ Avaliação Intermediária de Cibersegurança — Insper.
 3. Clique em **Carregar extensão temporária...**
 4. Selecione o arquivo `manifest.json` na raiz do repositório.
 5. A extensão **Rastro** aparece na lista e o ícone dela fica na barra de
-   ferramentas (se não aparecer, está no menu de extensões, ícone de peça 🧩).
+   ferramentas (se não aparecer, está no menu de extensões, o ícone de peça de quebra-cabeça).
 
 A extensão temporária é removida quando o Firefox é fechado; para usar de novo,
 repita os passos 2 a 4. Depois de alterar o código, clique em **Recarregar** no
@@ -82,10 +82,12 @@ Faixas: 80–100 boa · 50–79 moderada · abaixo de 50 ruim.
 
 ## Evidências e relatório
 
-- `evidencias/ddg/`: prints do plugin em execução nas DuckDuckGo Privacy Test Pages
-  (arquivos `*_final.png`, um por linha da tabela do relatório).
+- `evidencias/ddg/`: prints do plugin em execução nas DuckDuckGo Privacy Test Pages.
+  Os arquivos `*_final.png` são os usados no relatório (um ou mais por linha da
+  tabela); os demais são prints de validação tirados durante o desenvolvimento.
 - `evidencias/sites/<site>/`: para cada um dos 3 sites reais (`wikipedia`, `duckduckgo`,
   `govbr`), o HAR exportado do DevTools (`<site>.har`), os prints do popup
-  (`<site>_popup_*.png`), o painel do uBlock Origin (`<site>_ublock.png`) e o
-  resultado do Blacklight (`<site>_blacklight.png`).
+  (`<site>_popup_*.png`), o painel do uBlock Origin (`<site>_ublock.png`), o
+  registrador do uBlock filtrado pelas requisições bloqueadas
+  (`<site>_ublock_logger.png`) e o resultado do Blacklight (`<site>_blacklight*.png`).
 - `relatorio/`: relatório da avaliação (`relatorio.pdf`; fonte em `relatorio.html`).
