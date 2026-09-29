@@ -19,7 +19,8 @@
   .todo { background: #fff3b0; padding: 0 3pt; font-weight: bold; }
   figure { margin: 6pt 0 12pt; page-break-inside: avoid; }
   figure img { width: 100%; border: 1px solid #bbb; }
-  figcaption { font-size: 8.5pt; color: #555; }
+  figcaption { font-size: 9.5pt; color: #222; margin-top: 3pt; }
+  .figref { font-size: 8.5pt; color: #444; font-weight: normal; }
   .row-title { font-weight: bold; }
 </style>
 </head>
@@ -67,99 +68,100 @@ comportamento descrito no título ou no código dela.</p>
 <table>
 <tr><th style="width:17%">Teste</th><th style="width:24%">Esperado (reportado pela página)</th><th style="width:27%">Resultado do plugin</th><th>Explicação da divergência</th></tr>
 
-<tr><td class="row-title">Tracker Reporting: 1 major tracker loaded via script</td>
+<tr><td class="row-title">Tracker Reporting: 1 major tracker loaded via script<br><span class="figref">Figuras 1, 8</span></td>
 <td>1 rastreador: <code>&lt;script src="//doubleclick.net/tracker.js"&gt;</code></td>
 <td><code>doubleclick.net</code>, 1 requisição, tipo <code>script</code>. Nota 98.</td>
-<td>A detecção bate. A diferença aparece na aba Rede (figura de validação): a requisição a <code>doubleclick.net/tracker.js</code> saiu e voltou com tipo <code>html</code>, 0 B e <code>NS_ERROR_CORRUPTED_CONTENT</code>. Ou seja, o domínio real não serve esse arquivo como JavaScript e o Firefox recusou executar a resposta como script. O ícone de escudo ao lado do domínio mostra que o Firefox o reconhece como rastreador, mas no nível Padrão a proteção só bloqueia cookies de rastreamento, não o script. O plugin registra a requisição porque ela de fato foi feita; para o plugin, o que importa é a tentativa de conexão ao terceiro, não se o script rodou.</td></tr>
+<td>A detecção bate. A diferença aparece na aba Rede (figura 8): a requisição a <code>doubleclick.net/tracker.js</code> saiu e voltou com tipo <code>html</code>, 0 B e <code>NS_ERROR_CORRUPTED_CONTENT</code>. Ou seja, o domínio real não serve esse arquivo como JavaScript e o Firefox recusou executar a resposta como script. O ícone de escudo ao lado do domínio mostra que o Firefox o reconhece como rastreador, mas no nível Padrão a proteção só bloqueia cookies de rastreamento, não o script. O plugin registra a requisição porque ela de fato foi feita; para o plugin, o que importa é a tentativa de conexão ao terceiro, não se o script rodou.</td></tr>
 
-<tr><td class="row-title">Tracker Reporting: 1 major tracker with surrogate</td>
+<tr><td class="row-title">Tracker Reporting: 1 major tracker with surrogate<br><span class="figref">Figura 2</span></td>
 <td>1 rastreador (<code>doubleclick.net</code>), que o DDG trocaria por um script inofensivo (surrogate)</td>
 <td><code>doubleclick.net</code>, 1 requisição, <code>script</code>. Nota 98.</td>
 <td>O plugin não injeta surrogate, só observa. Por isso registra a requisição original ao rastreador.</td></tr>
 
-<tr><td class="row-title">Tracker Reporting: 1 major tracker loaded via img</td>
+<tr><td class="row-title">Tracker Reporting: 1 major tracker loaded via img<br><span class="figref">Figura 3</span></td>
 <td>1 rastreador via <code>&lt;img src="//facebook.com/tr?test=1"&gt;</code></td>
 <td><code>facebook.com</code>, 1 requisição, <code>image</code>, mais 1 cookie de terceira parte persistente. Nota 94 (−2 terceiro, −3 cookie de terceira parte, −1 persistente).</td>
 <td>Sem divergência. O plugin ainda mostra que a resposta do pixel gravou um cookie de terceira parte.</td></tr>
 
-<tr><td class="row-title">Tracker Reporting: Image loaded via document fragment</td>
+<tr><td class="row-title">Tracker Reporting: Image loaded via document fragment<br><span class="figref">Figura 4</span></td>
 <td>1 rastreador (<code>facebook.com</code>) criado via document fragment</td>
 <td><code>facebook.com</code>, 1 requisição, <code>image</code>. Nota 98.</td>
 <td>Sem divergência. A forma de inserir o elemento no DOM não muda a requisição de rede.</td></tr>
 
-<tr><td class="row-title">Tracker Reporting: document fragment [Delay 5s]</td>
+<tr><td class="row-title">Tracker Reporting: document fragment [Delay 5s]<br><span class="figref">Figura 5</span></td>
 <td>Mesmo rastreador, inserido 5 segundos depois do carregamento</td>
 <td><code>facebook.com</code>, 1 requisição, <code>image</code>. Nota 98.</td>
 <td>Sem divergência. O listener de rede fica ativo a vida inteira da página, não só no carregamento.</td></tr>
 
-<tr><td class="row-title">Tracker Reporting: 1 major tracker loaded via fetch</td>
+<tr><td class="row-title">Tracker Reporting: 1 major tracker loaded via fetch<br><span class="figref">Figura 6</span></td>
 <td>A página mostra "Tracker loaded" (fetch para <code>facebook.com</code>)</td>
 <td><code>facebook.com</code>, 1 requisição, tipo <code>xmlhttprequest</code>. Nota 98.</td>
 <td>Sem divergência. O Firefox classifica <code>fetch()</code> como <code>xmlhttprequest</code> no webRequest.</td></tr>
 
-<tr><td class="row-title">Tracker Reporting: via fetch [Delay 5s]</td>
+<tr><td class="row-title">Tracker Reporting: via fetch [Delay 5s]<br><span class="figref">Figura 7</span></td>
 <td>"Tracker loaded", 5 segundos depois do carregamento</td>
 <td><code>facebook.com</code>, 1 requisição, <code>xmlhttprequest</code>. Nota 98.</td>
 <td>Sem divergência, mesmo caso do delay acima.</td></tr>
 
-<tr><td class="row-title">Storage blocking</td>
+<tr><td class="row-title">Storage blocking<br><span class="figref">Figuras 9, 10, 11, 12</span></td>
 <td>"Stored random number … using 23 storage mechanisms (1 failed)". A falha é o WebSQL (<code>openDatabase is not defined</code>)</td>
-<td>2 domínios de terceira parte (<code>third-party.site</code>, com good e broken, e <code>ad-company.site</code>); 24 cookies gravados (17 de terceira parte, 7 de primeira, todos persistentes); armazenamento na página e nos iframes good, broken e ad-company (3 origens de terceira parte, 4 frames). Na execução 443 (figuras com o popup rolado), a mesma contagem: 24 gravados, 7 de primeira e 17 de terceira parte, com apenas 9 <code>Set-Cookie</code> recebidos, porque a maioria dos cookies é gravada por JavaScript (<code>document.cookie</code>) e só aparece no <code>cookies.onChanged</code>. Nota 56 (−4 terceiros, −20 cookies de terceira parte, −10 persistentes, −10 armazenamento).</td>
-<td>(1) WebSQL: o Firefox nunca implementou essa API. É limitação do navegador, não bloqueio. (2) O IndexedDB do iframe <code>convert.ad-company.site</code> fica vazio porque o iframe não consegue carregar <code>/helpers/idb-wrapper.js</code> (HTTP 404, conferido com <code>curl -sI https://convert.ad-company.site/helpers/idb-wrapper.js</code>) e a própria página mostra "DB is not defined". (3) Os cookies <code>tptdata</code> e <code>tpsdata</code> aparecem como primeira parte porque são gravados por scripts de <code>broken.</code> e <code>good.third-party.site</code> rodando no contexto da página, via <code>document.cookie</code>. O cookie recebe o domínio da página, a mesma técnica do <code>_ga</code>. (4) O DevTools da página não lista a origem dos iframes, que são removidos logo depois de gravar. O plugin vê os quatro frames porque lê de dentro de cada um. (5) Numa das execuções a página mostrou <code>NetworkError</code> nos testes de <code>/set-cookie</code> (status HTTP nulo) e o plugin contou 21 cookies, o mesmo que o <code>cookies.getAll</code>. Foi variação da página, não do plugin. (6) No iframe de anúncio, "first party header cookie: Request failed" aparece nas três execuções registradas (681, 443 e 31); na execução 31 (figura com os detalhes da página) aparece ainda "service worker cookieStore: Cannot GET …/service-worker-set-cookie", endpoint que responde 404. São falhas do servidor de teste, não do plugin.</td></tr>
+<td>2 domínios de terceira parte (<code>third-party.site</code>, com good e broken, e <code>ad-company.site</code>); 24 cookies gravados (17 de terceira parte, 7 de primeira, todos persistentes); armazenamento na página e nos iframes good, broken e ad-company (3 origens de terceira parte, 4 frames). Na execução 443 (figuras 10 e 11), a mesma contagem: 24 gravados, 7 de primeira e 17 de terceira parte, com apenas 9 <code>Set-Cookie</code> recebidos, porque a maioria dos cookies é gravada por JavaScript (<code>document.cookie</code>) e só aparece no <code>cookies.onChanged</code>. Nota 56 (−4 terceiros, −20 cookies de terceira parte, −10 persistentes, −10 armazenamento).</td>
+<td>(1) WebSQL: o Firefox nunca implementou essa API. É limitação do navegador, não bloqueio. (2) O IndexedDB do iframe <code>convert.ad-company.site</code> fica vazio porque o iframe não consegue carregar <code>/helpers/idb-wrapper.js</code> (HTTP 404, conferido com <code>curl -sI https://convert.ad-company.site/helpers/idb-wrapper.js</code>) e a própria página mostra "DB is not defined". (3) Os cookies <code>tptdata</code> e <code>tpsdata</code> aparecem como primeira parte porque são gravados por scripts de <code>broken.</code> e <code>good.third-party.site</code> rodando no contexto da página, via <code>document.cookie</code>. O cookie recebe o domínio da página, a mesma técnica do <code>_ga</code>. (4) O DevTools da página não lista a origem dos iframes, que são removidos logo depois de gravar. O plugin vê os quatro frames porque lê de dentro de cada um. (5) Numa das execuções a página mostrou <code>NetworkError</code> nos testes de <code>/set-cookie</code> (status HTTP nulo) e o plugin contou 21 cookies, o mesmo que o <code>cookies.getAll</code>. Foi variação da página, não do plugin. (6) No iframe de anúncio, "first party header cookie: Request failed" aparece nas três execuções registradas (681, 443 e 31); na execução 31 (figura 12) aparece ainda "service worker cookieStore: Cannot GET …/service-worker-set-cookie", endpoint que responde 404. São falhas do servidor de teste, não do plugin.</td></tr>
 
-<tr><td class="row-title">Fingerprinting canvas verification</td>
+<tr><td class="row-title">Fingerprinting canvas verification<br><span class="figref">Figuras 13, 14</span></td>
 <td>Tabela pass/fail da página com 4 <code>fail</code>: 2 de "resistance" (esperam ruído anti-fingerprint) e 2 de "correctness" (comparação com uma imagem de referência)</td>
 <td>Canvas fingerprint detectado: <code>getImageData</code> 122 leituras, 102 suspeitas; <code>toDataURL</code> 3 leituras, 0 suspeitas. Um terceiro, <code>cloudflare.com</code> (<code>cdnjs.cloudflare.com</code>, 1 script). Nota 78.</td>
 <td>Os 4 <code>fail</code> aparecem iguais com a extensão removida, então não são causados pelo plugin. Os de "resistance" esperam que o navegador adicione ruído aleatório nos pixels, coisa que o Firefox no modo Padrão não faz e o plugin, que só observa, também não. Os de "correctness" comparam com uma imagem fixa, e a renderização muda de máquina para máquina. É justamente isso que torna o canvas fingerprint possível. Durante o desenvolvimento a primeira versão do hook quebrou todos os testes ("Permission denied to access property length"), porque o hook usava <code>original.apply</code> do mundo da página. A correção foi trocar por <code>Reflect.apply</code>.</td></tr>
 
-<tr><td class="row-title">Fingerprinting (Start the test)</td>
+<tr><td class="row-title">Fingerprinting (Start the test)<br><span class="figref">Figuras 15, 16</span></td>
 <td>"Collected 124 datapoints (14 failed)". Entre eles há 4 testes de canvas: <code>canvas-2d-todataurl</code>, <code>canvas-2d-imagedata</code>, <code>canvas-2d-offscreen-todataurl</code> e <code>canvas-webgl</code></td>
 <td><code>toDataURL</code> 4 leituras, 4 suspeitas; <code>getImageData</code> 1 leitura, 1 suspeita. Canvas fingerprint detectado (−20). Nenhum terceiro, nenhum cookie; a própria página guarda uma chave <code>data</code> em localStorage, sessionStorage e IndexedDB, que é de primeira parte e não desconta. Nota 80.</td>
 <td>Os 4 testes de canvas foram detectados, inclusive o do OffscreenCanvas, que desenha num canvas e lê de outro. A primeira versão não pegava esse; a marca passou a acompanhar <code>transferToImageBitmap</code> e <code>drawImage</code>. A página não chama <code>convertToBlob</code> nem <code>readPixels</code> em nenhum momento. Os outros 120 datapoints (<code>navigator</code>, <code>screen</code>, parâmetros WebGL, cabeçalhos) ficam fora do que foi pedido, que era canvas.</td></tr>
 
-<tr><td class="row-title">Tracker Blocking</td>
+<tr><td class="row-title">Tracker Blocking<br><span class="figref">Figura 17</span></td>
 <td>A página pede para colocar <code>bad.third-party.site</code> na lista de bloqueio e espera as 23 requisições bloqueadas. Resultado: 22 carregaram (verde) e só o <code>websocket</code> falhou (vermelho)</td>
 <td>1 domínio de terceira parte (−2), nenhum cookie, nenhum armazenamento de terceiros. Nota 98. O único terceiro da página é <code>third-party.site</code>, para onde a página envia as 23 requisições do teste.</td>
 <td>O plugin é de detecção, não de bloqueio: não usa <code>webRequestBlocking</code> e não cancela nada. Por isso as 22 carregaram. O websocket falhou por conta própria, o plugin não interrompe requisição nenhuma.</td></tr>
 
-<tr><td class="row-title">Storage partitioning</td>
+<tr><td class="row-title">Storage partitioning<br><span class="figref">Figura 18</span></td>
 <td>"Retrieved data from 21 storage mechanisms". <code>document.cookie</code>, HTTP Cookie e Cookie Store API deram <b>fail</b> (a página considera fail quando o dado gravado num contexto é lido no outro). localStorage, sessionStorage, IndexedDB, Cache API, ServiceWorker, BroadcastChannel, SharedWorker, Web Locks, os caches de fetch, XHR, iframe, imagem, favicon, fonte e CSS, e o HSTS deram <b>pass</b> (particionados). WebSQL e Prefetch Cache: unsupported.</td>
 <td>Nota 95. 1 domínio de terceira parte (<code>privacy-test-pages.site</code>, 3 requisições de imagem, −2); 3 cookies gravados, nenhum de terceira parte, 3 persistentes (−3); 3 frames usando armazenamento.</td>
 <td>A página grava um valor em cada mecanismo num contexto e tenta lê-lo de outro site; "pass" significa que o segundo contexto não enxergou o valor. Para isso ela precisa de mais de um contexto de topo. O plugin reinicia o relatório da aba a cada navegação de topo (<code>background.js</code>, <code>onBeforeRequest</code> com <code>type === "main_frame"</code>), então o popup mostra só o que a última página carregada fez: um terceiro (<code>privacy-test-pages.site</code>, 3 imagens), 3 frames do próprio site usando armazenamento (chaves <code>partition_test</code>), 3 cookies persistentes de primeira parte e nenhum <code>sub_frame</code> de outro site. O plugin não correlaciona o que um site gravou com o que outro leu, que é exatamente o que a página mede. Os três <code>fail</code> de cookie são comportamento do Firefox nessa página, não do plugin.</td></tr>
 
-<tr><td class="row-title">Bounce tracking (4 links)</td>
+<tr><td class="row-title">Bounce tracking (4 links)<br><span class="figref">Figuras 19, 20</span></td>
 <td>Cada link passa por <code>bad.third-party.site/…/bounce.html</code>, que grava um ID (cookie e localStorage) e redireciona por JavaScript (<code>location.href</code>) passando o ID na URL</td>
 <td><code>good.third-party.site</code>: nenhum bounce. <code>first-party.site</code>, <code>privacy-test-pages.site</code> e <code>publisher-company.site</code>: bounce por <code>bad.third-party.site</code>. No print (link "Go to first-party.site"): "bad.third-party.site, saída automática em poucos segundos, ficou 0.4 s, gravou 0 cookie(s)", nenhuma conexão a terceiro no destino, e a URL de destino <code>?bounceUIDlocalStorage=83&amp;bounceUIDcookie=83&amp;isNew=</code>. Critério 6: −15.</td>
 <td>(1) O destino <code>good.third-party.site</code> não é acusado porque intermediário e destino têm o mesmo eTLD+1, <code>third-party.site</code>. Pela regra do plugin, é o mesmo site. (2) O Firefox não marcou essa navegação com o qualificador <code>client_redirect</code>. A detecção veio da regra de reserva: página aberta por link que saiu em menos de 10 segundos sem interação. (3) "gravou 0 cookie(s)" e <code>isNew=</code> vazio no print: o ID 83 já existia em <code>bad.third-party.site</code> (a página mostra "cookie ID: 83" e "localStorage ID: 83"), porque um dos outros links já tinha passado por lá. O intermediário só grava cookie novo na primeira passagem; nas seguintes, ele lê o ID existente e o passa na URL. Ainda assim o bounce é detectado, porque a regra olha a navegação, não o cookie. (4) O <code>webRequest.onBeforeRedirect</code> não vê esse salto, porque a página responde HTTP 200 e redireciona por script. Só o <code>webNavigation</code> vê. (5) O ID que o DDG usa vai de 1 a 101, curto demais para contar como cookie sync (mínimo de 8 caracteres).</td></tr>
 
-<tr><td class="row-title">Query parameters (4 links)</td>
+<tr><td class="row-title">Query parameters (4 links)<br><span class="figref">Figura 21</span></td>
 <td>Quatro links de <code>privacy-test-pages.site</code> para a landing <code>good.third-party.site/…/query.html</code>, com <code>utm_source</code>; com <code>utm_source</code> e <code>utm_medium</code>; com <code>fbclid</code> e <code>fb_source</code> (mais o parâmetro comum <code>u=14</code>); e um link só com parâmetros comuns, que não deve ser alterado. Um navegador com proteção (o do DDG) removeria os parâmetros de rastreio</td>
 <td>Parâmetros detectados, na ordem dos links: <code>utm_source</code>; <code>utm_source, utm_medium</code>; <code>fbclid, fb_source</code>; nenhum. No print (terceiro link): "Parâmetros de rastreio na URL: fbclid, fb_source", com o <code>u=14</code> da mesma URL ignorado. Os parâmetros comuns (<code>q</code>, <code>u</code>, <code>id</code>) nunca foram acusados.</td>
 <td>O "Results" da página mostra que os parâmetros chegaram: o Firefox no nível Padrão não os removeu. O plugin não reescreve URL, só detecta e desconta na nota.</td></tr>
 </table>
 
 <h3>3.2 Prints do plugin em execução</h3>
-<figure><img src="../evidencias/ddg/tracker-reporting-1major-via-script_final.png"><figcaption>Tracker Reporting, via script</figcaption></figure>
-<figure><img src="../evidencias/ddg/tracker-reporting-1major-with-surrogate_final.png"><figcaption>Tracker Reporting, with surrogate</figcaption></figure>
-<figure><img src="../evidencias/ddg/tracker-reporting-1major-via-img_final.png"><figcaption>Tracker Reporting, via img</figcaption></figure>
-<figure><img src="../evidencias/ddg/tracker-reporting-document-fragment_final.png"><figcaption>Tracker Reporting, document fragment</figcaption></figure>
-<figure><img src="../evidencias/ddg/tracker-reporting-document-fragment-delay_final.png"><figcaption>Tracker Reporting, document fragment com delay de 5 s</figcaption></figure>
-<figure><img src="../evidencias/ddg/tracker-reporting-1major-via-fetch_final.png"><figcaption>Tracker Reporting, via fetch</figcaption></figure>
-<figure><img src="../evidencias/ddg/tracker-reporting-1major-via-fetch-delay_final.png"><figcaption>Tracker Reporting, via fetch com delay de 5 s</figcaption></figure>
-<figure><img src="../evidencias/ddg/tracker-reporting-1major-via-script_rede.png"><figcaption>Aba Rede (validação): a requisição a doubleclick.net/tracker.js sai e volta como html com NS_ERROR_CORRUPTED_CONTENT</figcaption></figure>
-<figure><img src="../evidencias/ddg/storage-blocking_final.png"><figcaption>Storage blocking (execução 681)</figcaption></figure>
-<figure><img src="../evidencias/ddg/storage-blocking_final_2.png"><figcaption>Storage blocking (execução 443), popup rolado: contagem de cookies e a lista de cookies de terceira parte</figcaption></figure>
-<figure><img src="../evidencias/ddg/storage-blocking_final_3.png"><figcaption>Storage blocking (execução 443), continuação da lista: tptdata e tpsdata como primeira parte</figcaption></figure>
-<figure><img src="../evidencias/ddg/privacy-protections-storage-blocking_pagina.png"><figcaption>Storage blocking, detalhes da página numa execução anterior (número 31), com o WebSQL e o endpoint service-worker-set-cookie falhando</figcaption></figure>
-<figure><img src="../evidencias/ddg/fingerprinting-canvas_final.png"><figcaption>Fingerprinting canvas verification</figcaption></figure>
-<figure><img src="../evidencias/ddg/fingerprinting-canvas_final_2.png"><figcaption>Fingerprinting canvas verification, execução posterior com o popup rolado: leituras de canvas (getImageData 122/102, toDataURL 3/0), mesmo terceiro e mesma detecção</figcaption></figure>
-<figure><img src="../evidencias/ddg/fingerprinting_final.png"><figcaption>Fingerprinting</figcaption></figure>
-<figure><img src="../evidencias/ddg/fingerprinting_final_2.png"><figcaption>Fingerprinting, popup rolado: leituras de canvas (toDataURL 4/4, getImageData 1/1) e armazenamento da própria página</figcaption></figure>
-<figure><img src="../evidencias/ddg/request-blocking_final.png"><figcaption>Tracker Blocking</figcaption></figure>
-<figure><img src="../evidencias/ddg/storage-partitioning_final.png"><figcaption>Storage partitioning</figcaption></figure>
-<figure><img src="../evidencias/ddg/bounce-first-party_final.png"><figcaption>Bounce tracking, Go to first-party.site (ID 83 já existente no intermediário: isNew vazio, 0 cookies gravados)</figcaption></figure>
-<figure><img src="../evidencias/ddg/bounce-good_final.png"><figcaption>Bounce tracking, Go to good.third-party.site (sem bounce, mesmo eTLD+1)</figcaption></figure>
-<figure><img src="../evidencias/ddg/query-fbclid_final.png"><figcaption>Query parameters, terceiro link: landing em good.third-party.site com fbclid, fb_source e u</figcaption></figure>
+<p class="figref">Cada linha da tabela 3.1 indica as figuras correspondentes.</p>
+<figure><img src="../evidencias/ddg/tracker-reporting-1major-via-script_final.png"><figcaption><b>Figura 1.</b> Tracker Reporting, via script</figcaption></figure>
+<figure><img src="../evidencias/ddg/tracker-reporting-1major-with-surrogate_final.png"><figcaption><b>Figura 2.</b> Tracker Reporting, with surrogate</figcaption></figure>
+<figure><img src="../evidencias/ddg/tracker-reporting-1major-via-img_final.png"><figcaption><b>Figura 3.</b> Tracker Reporting, via img</figcaption></figure>
+<figure><img src="../evidencias/ddg/tracker-reporting-document-fragment_final.png"><figcaption><b>Figura 4.</b> Tracker Reporting, document fragment</figcaption></figure>
+<figure><img src="../evidencias/ddg/tracker-reporting-document-fragment-delay_final.png"><figcaption><b>Figura 5.</b> Tracker Reporting, document fragment com delay de 5 s</figcaption></figure>
+<figure><img src="../evidencias/ddg/tracker-reporting-1major-via-fetch_final.png"><figcaption><b>Figura 6.</b> Tracker Reporting, via fetch</figcaption></figure>
+<figure><img src="../evidencias/ddg/tracker-reporting-1major-via-fetch-delay_final.png"><figcaption><b>Figura 7.</b> Tracker Reporting, via fetch com delay de 5 s</figcaption></figure>
+<figure><img src="../evidencias/ddg/tracker-reporting-1major-via-script_rede.png"><figcaption><b>Figura 8.</b> Aba Rede (validação): a requisição a doubleclick.net/tracker.js sai e volta como html com NS_ERROR_CORRUPTED_CONTENT</figcaption></figure>
+<figure><img src="../evidencias/ddg/storage-blocking_final.png"><figcaption><b>Figura 9.</b> Storage blocking (execução 681)</figcaption></figure>
+<figure><img src="../evidencias/ddg/storage-blocking_final_2.png"><figcaption><b>Figura 10.</b> Storage blocking (execução 443), popup rolado: contagem de cookies e a lista de cookies de terceira parte</figcaption></figure>
+<figure><img src="../evidencias/ddg/storage-blocking_final_3.png"><figcaption><b>Figura 11.</b> Storage blocking (execução 443), continuação da lista: tptdata e tpsdata como primeira parte</figcaption></figure>
+<figure><img src="../evidencias/ddg/privacy-protections-storage-blocking_pagina.png"><figcaption><b>Figura 12.</b> Storage blocking, detalhes da página numa execução anterior (número 31), com o WebSQL e o endpoint service-worker-set-cookie falhando</figcaption></figure>
+<figure><img src="../evidencias/ddg/fingerprinting-canvas_final.png"><figcaption><b>Figura 13.</b> Fingerprinting canvas verification</figcaption></figure>
+<figure><img src="../evidencias/ddg/fingerprinting-canvas_final_2.png"><figcaption><b>Figura 14.</b> Fingerprinting canvas verification, execução posterior com o popup rolado: leituras de canvas (getImageData 122/102, toDataURL 3/0), mesmo terceiro e mesma detecção</figcaption></figure>
+<figure><img src="../evidencias/ddg/fingerprinting_final.png"><figcaption><b>Figura 15.</b> Fingerprinting</figcaption></figure>
+<figure><img src="../evidencias/ddg/fingerprinting_final_2.png"><figcaption><b>Figura 16.</b> Fingerprinting, popup rolado: leituras de canvas (toDataURL 4/4, getImageData 1/1) e armazenamento da própria página</figcaption></figure>
+<figure><img src="../evidencias/ddg/request-blocking_final.png"><figcaption><b>Figura 17.</b> Tracker Blocking</figcaption></figure>
+<figure><img src="../evidencias/ddg/storage-partitioning_final.png"><figcaption><b>Figura 18.</b> Storage partitioning</figcaption></figure>
+<figure><img src="../evidencias/ddg/bounce-first-party_final.png"><figcaption><b>Figura 19.</b> Bounce tracking, Go to first-party.site (ID 83 já existente no intermediário: isNew vazio, 0 cookies gravados)</figcaption></figure>
+<figure><img src="../evidencias/ddg/bounce-good_final.png"><figcaption><b>Figura 20.</b> Bounce tracking, Go to good.third-party.site (sem bounce, mesmo eTLD+1)</figcaption></figure>
+<figure><img src="../evidencias/ddg/query-fbclid_final.png"><figcaption><b>Figura 21.</b> Query parameters, terceiro link: landing em good.third-party.site com fbclid, fb_source e u</figcaption></figure>
 
 <h2>4. Entregável 3: análise de 3 sites reais</h2>
 <p>Os sites foram de escolha livre. Foram escolhidos <code>pt.wikipedia.org</code> e <code>duckduckgo.com</code>,
@@ -177,6 +179,7 @@ inclusive CDN e serviço que não rastreia, sem rótulo. Então o plugin sempre 
 diz o que cada um é.</p>
 
 <h3>4.1 pt.wikipedia.org</h3>
+<p class="figref">Prints deste site: figuras 22, 23, 24, 25, 26.</p>
 <table>
 <tr><th>Fonte</th><th>O que encontrou</th></tr>
 <tr><td>Plugin</td><td>Nota 68 (moderada). 1 domínio de terceira parte, <code>wikimedia.org</code>
@@ -205,13 +208,14 @@ As três concordam no fato, um único terceiro de telemetria e CDN, e divergem s
 <td>O cookie chega com <code>Max-Age=3600</code>, uma hora. O plugin classifica como persistente qualquer cookie que tenha data de expiração. Está tecnicamente certo, mas infla o critério 3 em 3 pontos. O caso está na seção 6.</td></tr>
 <tr><td>Canvas, storage de terceiros, bounce e sync</td><td>0</td><td>não encontrado</td><td>—</td><td>Concordam. O HAR não tem requisição a domínio de anúncio nem redirecionamento entre sites.</td></tr>
 </table>
-<figure><img src="../evidencias/sites/wikipedia/wikipedia_popup_1.png"><figcaption>Wikipédia, popup do plugin com a nota e os critérios</figcaption></figure>
-<figure><img src="../evidencias/sites/wikipedia/wikipedia_popup_2.png"><figcaption>Wikipédia, terceiros e cookies injetados. Os dois POST a intake-analytics com NS_ERROR_DOM_NETWORK na aba Rede são falhas do próprio beacon, não bloqueio: no HAR as quatro requisições a esse host respondem 202.</figcaption></figure>
-<figure><img src="../evidencias/sites/wikipedia/wikipedia_ublock.png"><figcaption>Wikipédia, uBlock Origin</figcaption></figure>
-<figure><img src="../evidencias/sites/wikipedia/wikipedia_ublock_logger.png"><figcaption>Wikipédia, registrador do uBlock filtrado pelas requisições bloqueadas</figcaption></figure>
-<figure><img src="../evidencias/sites/wikipedia/wikipedia_blacklight.png"><figcaption>Wikipédia, Blacklight</figcaption></figure>
+<figure><img src="../evidencias/sites/wikipedia/wikipedia_popup_1.png"><figcaption><b>Figura 22.</b> Wikipédia, popup do plugin com a nota e os critérios</figcaption></figure>
+<figure><img src="../evidencias/sites/wikipedia/wikipedia_popup_2.png"><figcaption><b>Figura 23.</b> Wikipédia, terceiros e cookies injetados. Os dois POST a intake-analytics com NS_ERROR_DOM_NETWORK na aba Rede são falhas do próprio beacon, não bloqueio: no HAR as quatro requisições a esse host respondem 202.</figcaption></figure>
+<figure><img src="../evidencias/sites/wikipedia/wikipedia_ublock.png"><figcaption><b>Figura 24.</b> Wikipédia, uBlock Origin</figcaption></figure>
+<figure><img src="../evidencias/sites/wikipedia/wikipedia_ublock_logger.png"><figcaption><b>Figura 25.</b> Wikipédia, registrador do uBlock filtrado pelas requisições bloqueadas</figcaption></figure>
+<figure><img src="../evidencias/sites/wikipedia/wikipedia_blacklight.png"><figcaption><b>Figura 26.</b> Wikipédia, Blacklight</figcaption></figure>
 
 <h3>4.2 www.gov.br/pt-br</h3>
+<p class="figref">Prints deste site: figuras 27, 28, 29, 30, 31, 32, 33, 34.</p>
 <p>O aviso de cookies ficou sem resposta o tempo todo. A nota do plugin foi caindo enquanto a página carregava:
 80 logo depois do <code>load</code>, 63 um pouco depois e 55 depois de uns 30 segundos (valores lidos no popup durante o carregamento; os prints são do estado final), porque o Google Tag Manager, o Google
 Analytics e o mPulse só disparam quando a página já está pronta. Os prints e o HAR são do estado estabilizado, com nota 55.</p>
@@ -222,7 +226,7 @@ Analytics e o mPulse só disparam quando a página já está pronta. Os prints e
 <code>browser-update.org</code> 1, <code>doubleclick.net</code> 1 (beacon) e <code>google.com.br</code> 1 (image). Cookies: 89 <code>Set-Cookie</code> recebidos e 4 gravados,
 2 de primeira parte e de sessão (<code>TScceab889027</code>, <code>Encrypted-Local-Storage-Key</code>) e 2 de terceira parte persistentes por 400 dias (<code>_ga</code> e <code>_ga_X0DQ0CT40G</code> em <code>.ebc.com.br</code>, particionados).
 Nenhum storage HTML5 de terceiros e nenhum canvas. Cookie sync detectado (−15). O popup lista o identificador de cliente do GA, <code>cid=72351855…</code>, enviado a <code>google.com</code>, <code>doubleclick.net</code> e <code>google.com.br</code>, e também os parâmetros <code>tid</code>, <code>gtm</code>, <code>gcd</code> e <code>tag_exp</code> enviados aos mesmos domínios e a <code>googletagmanager.com</code>.</td></tr>
-<tr><td>Blacklight</td><td>1 ad tracker, que o próprio Blacklight descreve como "a script belonging to the company Alphabet, Inc." (figura do Blacklight com a linha expandida). 0 third-party cookies. Sem canvas fingerprinting, session recording, key logging e pixels.
+<tr><td>Blacklight</td><td>1 ad tracker, que o próprio Blacklight descreve como "a script belonging to the company Alphabet, Inc." (figura 34). 0 third-party cookies. Sem canvas fingerprinting, session recording, key logging e pixels.
 "Google Analytics remarketing audiences" não encontrado. A visita do Blacklight foi feita com <code>device=mobile</code> e <code>location=us-ca</code>.</td></tr>
 <tr><td>uBlock Origin</td><td>5 bloqueios na página (3%), 9 de 12 domínios conectados. O registrador lista os cinco: <code>s.go-mpulse.net/boomerang/R7WQE-…</code> (2 vezes, regra <code>||go-mpulse.net^</code>), <code>www.googletagmanager.com/gtag/js?id=G-X0DQ0CT40G</code> (2 vezes, regra <code>||googletagmanager.com^</code>, e o uBlock ainda substitui o script por uma versão neutra, <code>googletagmanager_gtm.js</code>, via <code>redirect-rule</code>) e <code>browser-update.org/update.min.js</code> (1 vez, regra <code>||browser-update.org^$3p</code>). Os quatro primeiros são pedidos pelo iframe <code>agenciagov.ebc.com.br</code>; o último, pela própria página.</td></tr>
 <tr><td>HAR</td><td><code>govbr.har</code>: 140 requisições. As de rastreamento: <code>www.googletagmanager.com/gtag/js?id=G-X0DQ0CT40G</code> (2 vezes),
@@ -240,7 +244,7 @@ como <code>gov.br</code> está na Public Suffix List, cada órgão é um site di
 <td>O HAR mostra que esses cookies não vêm de cabeçalho <code>Set-Cookie</code>: são gravados pelo <code>gtag.js</code> via <code>document.cookie</code> dentro do iframe <code>agenciagov.ebc.com.br/embedgov_view</code>. Para o iframe eles são de primeira parte; para a aba, que está em <code>www.gov.br</code>, são de terceira parte, e o Firefox os particiona.
 O plugin classifica em relação à aba, como o enunciado pede. A explicação mais consistente com o HAR para o 0 do Blacklight é a visita em modo mobile: o <code>_ga</code> só existe porque o iframe da Agência Gov carrega o <code>gtag.js</code>, e num layout sem esse embed o cookie não é criado.</td></tr>
 <tr><td>Cookie sync (critério 6)</td><td>detectado (−15)</td><td>—</td><td>—</td>
-<td>O HAR confirma: o ID de cliente do GA, <code>cid=1372646340.1790629402</code>, que é o identificador guardado no cookie <code>_ga</code> (formato <code>GA1.1.&lt;cid&gt;</code>), vai para <code>stats.g.doubleclick.net</code> e para <code>www.google.com.br/ads/ga-audiences</code>. O mesmo identificador cruza três domínios. O popup mostra a mesma coisa (figura da seção de cookie sync completa): <code>cid=72351855…</code> enviado a <code>google.com</code>, <code>doubleclick.net</code> e <code>google.com.br</code>. O valor é outro porque essa figura é de uma visita nova, com os dados do site limpos, e o GA gera um <code>cid</code> novo a cada cookie <code>_ga</code> criado. O Blacklight não tem essa categoria.
+<td>O HAR confirma: o ID de cliente do GA, <code>cid=1372646340.1790629402</code>, que é o identificador guardado no cookie <code>_ga</code> (formato <code>GA1.1.&lt;cid&gt;</code>), vai para <code>stats.g.doubleclick.net</code> e para <code>www.google.com.br/ads/ga-audiences</code>. O mesmo identificador cruza três domínios. O popup mostra a mesma coisa (figura 30): <code>cid=72351855…</code> enviado a <code>google.com</code>, <code>doubleclick.net</code> e <code>google.com.br</code>. O valor é outro porque a figura 30 é de uma visita nova, com os dados do site limpos, e o GA gera um <code>cid</code> novo a cada cookie <code>_ga</code> criado. O Blacklight não tem essa categoria.
 Um detalhe que precisa de ajuste: além do <code>cid</code>, o popup lista <code>tid</code>, <code>gtm</code>, <code>gcd</code> e <code>tag_exp</code> como se fossem identificadores. São parâmetros de configuração do GA, iguais para todos os visitantes. A heurística acerta o caso por causa do <code>cid</code>, mas gera linhas a mais (seção 6).</td></tr>
 <tr><td>Google Analytics remarketing (<code>ga-audiences</code>)</td><td>requisição contada em <code>google.com.br</code></td><td>"não encontrado"</td><td>não ocorre: o <code>gtag.js</code> que a dispara é bloqueado antes</td>
 <td>O HAR tem <code>GET www.google.com.br/ads/ga-audiences?…</code> com status 200, que é o tipo de requisição que o Blacklight descreve como "remarketing audiences". Pelo mesmo motivo do <code>_ga</code>, a visita mobile do Blacklight, sem o iframe que carrega o GA, não gera essa requisição. O plugin não rotula a requisição como remarketing, só conta o domínio.</td></tr>
@@ -248,16 +252,17 @@ Um detalhe que precisa de ajuste: além do <code>cid</code>, o popup lista <code
 <td>É monitoramento de desempenho (RUM) carregado pelo iframe da EBC, dá para ver pelo <code>d=agenciagov.ebc.com.br</code> na URL. Está nas listas do uBlock, por isso ele bloqueia. Não é rastreador de anúncio, por isso o Blacklight ignora. O plugin trata como qualquer outro terceiro.</td></tr>
 <tr><td>Canvas</td><td>0</td><td>não encontrado</td><td>—</td><td>Concordam.</td></tr>
 </table>
-<figure><img src="../evidencias/sites/govbr/govbr_popup_1.png"><figcaption>gov.br, popup do plugin com a nota e os critérios</figcaption></figure>
-<figure><img src="../evidencias/sites/govbr/govbr_popup_2.png"><figcaption>gov.br, os 11 domínios de terceira parte</figcaption></figure>
-<figure><img src="../evidencias/sites/govbr/govbr_popup_3.png"><figcaption>gov.br, cookies, canvas e cookie sync</figcaption></figure>
-<figure><img src="../evidencias/sites/govbr/govbr_popup_4.png"><figcaption>gov.br, seção de cookie sync completa (visita nova, com dados do site limpos)</figcaption></figure>
-<figure><img src="../evidencias/sites/govbr/govbr_ublock.png"><figcaption>gov.br, uBlock Origin com 5 bloqueios</figcaption></figure>
-<figure><img src="../evidencias/sites/govbr/govbr_ublock_logger.png"><figcaption>gov.br, registrador do uBlock filtrado pelas requisições bloqueadas</figcaption></figure>
-<figure><img src="../evidencias/sites/govbr/govbr_blacklight.png"><figcaption>gov.br, Blacklight</figcaption></figure>
-<figure><img src="../evidencias/sites/govbr/govbr_blacklight_2.png"><figcaption>gov.br, Blacklight com a linha do ad tracker expandida (script da Alphabet, Inc.)</figcaption></figure>
+<figure><img src="../evidencias/sites/govbr/govbr_popup_1.png"><figcaption><b>Figura 27.</b> gov.br, popup do plugin com a nota e os critérios</figcaption></figure>
+<figure><img src="../evidencias/sites/govbr/govbr_popup_2.png"><figcaption><b>Figura 28.</b> gov.br, os 11 domínios de terceira parte</figcaption></figure>
+<figure><img src="../evidencias/sites/govbr/govbr_popup_3.png"><figcaption><b>Figura 29.</b> gov.br, cookies, canvas e cookie sync</figcaption></figure>
+<figure><img src="../evidencias/sites/govbr/govbr_popup_4.png"><figcaption><b>Figura 30.</b> gov.br, seção de cookie sync completa (visita nova, com dados do site limpos)</figcaption></figure>
+<figure><img src="../evidencias/sites/govbr/govbr_ublock.png"><figcaption><b>Figura 31.</b> gov.br, uBlock Origin com 5 bloqueios</figcaption></figure>
+<figure><img src="../evidencias/sites/govbr/govbr_ublock_logger.png"><figcaption><b>Figura 32.</b> gov.br, registrador do uBlock filtrado pelas requisições bloqueadas</figcaption></figure>
+<figure><img src="../evidencias/sites/govbr/govbr_blacklight.png"><figcaption><b>Figura 33.</b> gov.br, Blacklight</figcaption></figure>
+<figure><img src="../evidencias/sites/govbr/govbr_blacklight_2.png"><figcaption><b>Figura 34.</b> gov.br, Blacklight com a linha do ad tracker expandida (script da Alphabet, Inc.)</figcaption></figure>
 
 <h3>4.3 duckduckgo.com</h3>
+<p class="figref">Prints deste site: figuras 35, 36, 37, 38, 39.</p>
 <table>
 <tr><th>Fonte</th><th>O que encontrou</th></tr>
 <tr><td>Plugin</td><td>Nota 100 (boa). Nenhum domínio de terceira parte, nenhum <code>Set-Cookie</code> recebido, nenhum cookie gravado, nenhuma origem de terceiros com armazenamento HTML5
@@ -277,11 +282,11 @@ sem cookie e para o mesmo eTLD+1 da página. O plugin, como foi pedido, mede ter
 O uBlock bloqueia pela regra <code>||duckduckgo.com/t/</code>, que pega o caminho <code>/t/</code> mesmo sendo do próprio site; o registrador confirma que todos os bloqueios são esses POST. Isso mostra um limite da abordagem por terceira parte: ela não pega coleta feita pelo próprio site.</td></tr>
 <tr><td>Todos os outros critérios</td><td>0</td><td>não encontrado</td><td>—</td><td>Concordam. É o site de contraste: a metodologia dá 100 para um site que não usa terceiros nem cookies.</td></tr>
 </table>
-<figure><img src="../evidencias/sites/duckduckgo/duckduckgo_popup_1.png"><figcaption>DuckDuckGo, popup do plugin com nota 100</figcaption></figure>
-<figure><img src="../evidencias/sites/duckduckgo/duckduckgo_popup_2.png"><figcaption>DuckDuckGo, cookies, canvas, bounce e armazenamento vazios</figcaption></figure>
-<figure><img src="../evidencias/sites/duckduckgo/duckduckgo_ublock.png"><figcaption>DuckDuckGo, uBlock Origin com 8 bloqueios de telemetria de primeira parte</figcaption></figure>
-<figure><img src="../evidencias/sites/duckduckgo/duckduckgo_ublock_logger.png"><figcaption>DuckDuckGo, registrador do uBlock filtrado pelas requisições bloqueadas</figcaption></figure>
-<figure><img src="../evidencias/sites/duckduckgo/duckduckgo_blacklight.png"><figcaption>DuckDuckGo, Blacklight</figcaption></figure>
+<figure><img src="../evidencias/sites/duckduckgo/duckduckgo_popup_1.png"><figcaption><b>Figura 35.</b> DuckDuckGo, popup do plugin com nota 100</figcaption></figure>
+<figure><img src="../evidencias/sites/duckduckgo/duckduckgo_popup_2.png"><figcaption><b>Figura 36.</b> DuckDuckGo, cookies, canvas, bounce e armazenamento vazios</figcaption></figure>
+<figure><img src="../evidencias/sites/duckduckgo/duckduckgo_ublock.png"><figcaption><b>Figura 37.</b> DuckDuckGo, uBlock Origin com 8 bloqueios de telemetria de primeira parte</figcaption></figure>
+<figure><img src="../evidencias/sites/duckduckgo/duckduckgo_ublock_logger.png"><figcaption><b>Figura 38.</b> DuckDuckGo, registrador do uBlock filtrado pelas requisições bloqueadas</figcaption></figure>
+<figure><img src="../evidencias/sites/duckduckgo/duckduckgo_blacklight.png"><figcaption><b>Figura 39.</b> DuckDuckGo, Blacklight</figcaption></figure>
 
 <h2>5. Entregável 4: pontuação de privacidade</h2>
 <h3>5.1 Metodologia</h3>
